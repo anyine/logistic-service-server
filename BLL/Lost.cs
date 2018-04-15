@@ -22,6 +22,21 @@ namespace BLL
             return dt;
         }
 
+        //获取单家公司失物招领信息
+        public DataTable GetCompanyLostInfo(string companyId)
+        {
+            string str = @"select     id,
+                                      companyId,
+                                      lost_content, 
+                                      CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.ls_lost
+                               where companyId='{0}'";
+            str = string.Format(str, companyId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //新增新闻
 //        public bool AddNews(string news_type, string news_cover, string news_title, string news_brief, string news_content)
 //        {
