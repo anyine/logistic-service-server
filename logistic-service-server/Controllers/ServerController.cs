@@ -270,5 +270,49 @@ namespace logistic_service_server.Controllers
             };
         }
         #endregion
+
+        #region 获取单家公司失物招领信息
+        /// <summary>  
+        /// 获取失物招领信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getCompanyLostInfo(string companyId)
+        {
+            DataTable dt = new BLL.Lost().GetCompanyLostInfo(companyId);
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                lost lost = new lost();
+                lost.id = dt.Rows[0]["id"].ToString();
+                lost.companyId = dt.Rows[0]["companyId"].ToString();
+                lost.lost_content = dt.Rows[0]["lost_content"].ToString();
+                lost.create_time = dt.Rows[0]["create_time"].ToString();
+
+                data = new
+                {
+                    success = true,
+                    backData = lost
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backData = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
     }
 }
