@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using System.Web.Security;
 using System.Web.SessionState;
 using logistic_service_server.Models;
+using treePlanting.Core;
 
 namespace logistic_service_server.Controllers
 {
@@ -161,32 +162,95 @@ namespace logistic_service_server.Controllers
         }
         #endregion
 
+        #region 新增或修改失物招领信息
+        /// <summary>  
+        /// 新增或修改失物招领信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveLost(dynamic l)
+        {
+            string companyId = l.companyId;
+            string lost_content = l.lost_content;
+            Object data;
+
+            try
+            {
+                BLL.Lost lost = new BLL.Lost();
+                bool flag = false;
+                flag = lost.EditLost(lost_content, companyId);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "更新失物招领信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+            string str = @"select * from dbo.ls_lost";
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取失物招领信息
         /// <summary>  
         /// 获取失物招领信息 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
+        [SupportFilter]
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage getLostInfo(int id)
+        public HttpResponseMessage getLostInfo()
         {
-            string str = @"select * from dbo.ls_lost";
-            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+            DataTable dt = new BLL.Lost().GetLostInfo();
             Object data;
-            if (dt.Rows.Count == 1)
+            if (dt.Rows.Count > 0)
             {
-                Lost lost = new Lost();
-                lost.id = dt.Rows[0]["id"].ToString();
-                lost.companyId = dt.Rows[0]["companyId"].ToString();
-                lost.lost_title = dt.Rows[0]["lost_title"].ToString();
-                lost.lost_content = dt.Rows[0]["lost_content"].ToString();
-                lost.publish_time = dt.Rows[0]["publish_time"].ToString();
-                lost.create_time = dt.Rows[0]["create_time"].ToString();
+                List<lost> list = new List<lost>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    lost lost = new lost();
+                    lost.id = dt.Rows[i]["id"].ToString();
+                    lost.companyId = dt.Rows[i]["companyId"].ToString();
+                    lost.lost_content = dt.Rows[i]["lost_content"].ToString();
+                    lost.create_time = dt.Rows[i]["create_time"].ToString();
+
+                    list.Add(lost);
+                }
+
 
                 data = new
                 {
                     success = true,
-                    backData = lost
+                    backData = list
                 };
             }
             else

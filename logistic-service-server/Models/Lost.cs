@@ -5,7 +5,7 @@ using System.Web;
 
 namespace logistic_service_server.Models
 {
-    public class Lost
+    public class lost
     {
         public string id { set; get; }
         public string companyId { set; get; }
