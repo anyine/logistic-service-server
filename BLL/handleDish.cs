@@ -19,5 +19,17 @@ namespace BLL
 
             return dt;
         }
+
+        //新增或修改菜品
+        public bool AddDish(string dish_title, string dish_content, string dish_img, string companyId, string dish_type)
+        {
+            string str = @"insert into dbo.ls_dish (dish_title, dish_content, dish_img, companyId, dish_type)
+                                values ('{0}', '{1}', '{2}', '{3}', '{4}')";
+            str = string.Format(str, dish_title, dish_content, dish_img, companyId, dish_type);
+            CommonTool.WriteLog.Write("AddDish str === " + str);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
     }
 }
