@@ -211,9 +211,77 @@ namespace logistic_service_server.Controllers
         }
         #endregion
 
-        #region 新增或修改失物招领信息
+        #region 新增或修改菜品信息
         /// <summary>  
-        /// 新增或修改失物招领信息 
+        /// 新增或修改菜品信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveAPDish(dynamic d)
+        {
+            string id = d.id;
+            string dish_title = d.dish_title;
+            string dish_content = d.dish_content;
+            string dish_img = d.dish_img;
+            string companyId = d.companyId;
+            string dish_type = d.dish_type;
+            Object data;
+
+            try
+            {
+                BLL.handleDish dish = new BLL.handleDish();
+                bool flag = false;
+                if (string.IsNullOrEmpty(id))
+                {
+                    flag = dish.AddDish(dish_title, dish_content, dish_img, companyId, dish_type);
+                }
+                else
+                {
+
+                }
+
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "更新菜品信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 修改失物招领信息
+        /// <summary>  
+        /// 修改失物招领信息 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
