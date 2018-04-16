@@ -162,6 +162,55 @@ namespace logistic_service_server.Controllers
         }
         #endregion
 
+        #region 获取所有菜单
+        /// <summary>  
+        /// 获取所有菜单 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getDishList()
+        {
+            DataTable dt = new BLL.handleDish().GetDishList();
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<dish> list = new List<dish>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    dish dish = new dish();
+                    dish.id = dt.Rows[i]["id"].ToString();
+                    dish.create_time = dt.Rows[i]["create_time"].ToString();
+
+                    list.Add(dish);
+                }
+
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 新增或修改失物招领信息
         /// <summary>  
         /// 新增或修改失物招领信息 
@@ -258,7 +307,7 @@ namespace logistic_service_server.Controllers
                 data = new
                 {
                     success = false,
-                    backData = "数据异常"
+                    backMsg = "数据异常"
                 };
             }
 
@@ -302,7 +351,7 @@ namespace logistic_service_server.Controllers
                 data = new
                 {
                     success = false,
-                    backData = "数据异常"
+                    backMsg = "数据异常"
                 };
             }
 
