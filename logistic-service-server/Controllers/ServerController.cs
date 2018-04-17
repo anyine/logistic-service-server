@@ -181,6 +181,12 @@ namespace logistic_service_server.Controllers
                 {
                     dish dish = new dish();
                     dish.id = dt.Rows[i]["id"].ToString();
+                    dish.dish_title = dt.Rows[i]["dish_title"].ToString();
+                    dish.dish_content = dt.Rows[i]["dish_content"].ToString();
+                    dish.dish_img = dt.Rows[i]["dish_img"].ToString();
+                    dish.companyId = dt.Rows[i]["companyId"].ToString();
+                    dish.dish_type = dt.Rows[i]["dish_type"].ToString();
+                    dish.is_online = Convert.ToInt32(dt.Rows[i]["is_online"]);
                     dish.create_time = dt.Rows[i]["create_time"].ToString();
 
                     list.Add(dish);
@@ -242,6 +248,63 @@ namespace logistic_service_server.Controllers
 
                 }
 
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "更新菜品信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 修改菜品信息
+        /// <summary>  
+        /// 新增或修改菜品信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage onlineStateChange(dynamic d)
+        {
+            string id = d.id;
+            int is_online = d.is_online;
+            Object data;
+
+            try
+            {
+                BLL.handleDish dish = new BLL.handleDish();
+                bool flag = false;
+
+                flag = dish.OnlineStateChange(id, is_online);
 
                 if (flag)
                 {
