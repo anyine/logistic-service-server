@@ -187,6 +187,7 @@ namespace logistic_service_server.Controllers
                     dish.companyId = dt.Rows[i]["companyId"].ToString();
                     dish.dish_type = dt.Rows[i]["dish_type"].ToString();
                     dish.is_online = Convert.ToInt32(dt.Rows[i]["is_online"]);
+                    dish.update_time = dt.Rows[i]["update_time"].ToString();
                     dish.create_time = dt.Rows[i]["create_time"].ToString();
 
                     list.Add(dish);
@@ -197,6 +198,56 @@ namespace logistic_service_server.Controllers
                 {
                     success = true,
                     backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取菜单详情
+        /// <summary>  
+        /// 获取菜单详情 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getDishDetail(string id)
+        {
+            DataTable dt = new BLL.handleDish().GetDishDetail(id);
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                dish dish = new dish();
+                dish.id = dt.Rows[0]["id"].ToString();
+                dish.dish_title = dt.Rows[0]["dish_title"].ToString();
+                dish.dish_content = dt.Rows[0]["dish_content"].ToString();
+                dish.dish_img = dt.Rows[0]["dish_img"].ToString();
+                dish.companyId = dt.Rows[0]["companyId"].ToString();
+                dish.dish_type = dt.Rows[0]["dish_type"].ToString();
+                dish.is_online = Convert.ToInt32(dt.Rows[0]["is_online"]);
+                dish.update_time = dt.Rows[0]["update_time"].ToString();
+                dish.create_time = dt.Rows[0]["create_time"].ToString();
+
+
+                data = new
+                {
+                    success = true,
+                    backData = dish
                 };
             }
             else
@@ -245,7 +296,7 @@ namespace logistic_service_server.Controllers
                 }
                 else
                 {
-
+                    flag = dish.EditDish(id, dish_title, dish_content, dish_img, companyId, dish_type);
                 }
 
 
