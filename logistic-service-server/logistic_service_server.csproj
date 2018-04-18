@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="Models\dish.cs" />
     <Compile Include="Models\lost.cs" />
+    <Compile Include="Models\residence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

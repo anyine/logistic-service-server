@@ -51,8 +51,15 @@ namespace treePlanting.Core
         private bool ValidateTicket(string encryptToken)
         {
             bool flag = false;
-            //解密Ticket
-            var strTicket = FormsAuthentication.Decrypt(encryptToken).UserData;
+            var strTicket = string.Empty;
+            try
+            {
+                //解密Ticket
+                strTicket = FormsAuthentication.Decrypt(encryptToken).UserData;
+            }catch{
+                return flag;
+            }
+            
 
             //从Ticket里面获取用户名和密码
             var index = strTicket.IndexOf("&");

@@ -62,7 +62,7 @@ namespace logistic_service_server.Controllers
             if (dt_user.Rows.Count == 1)
             {
                 FormsAuthenticationTicket token = new FormsAuthenticationTicket(0, userName, DateTime.Now,
-                            DateTime.Now.AddHours(1), true, string.Format("{0}&{1}", userName, userPwd),
+                            DateTime.Now.AddHours(5), true, string.Format("{0}&{1}", userName, userPwd),
                             FormsAuthentication.FormsCookiePath);
                 //返回登录结果、用户信息、用户验证票据信息
                 var Token = FormsAuthentication.Encrypt(token);
@@ -74,7 +74,8 @@ namespace logistic_service_server.Controllers
                 data = new
                 {
                     success = true,
-                    token = Token
+                    token = Token,
+                    userId = dt_user.Rows[0]["id"]
                 };
             }
             else
@@ -115,7 +116,7 @@ namespace logistic_service_server.Controllers
             try
             {
                 //清空数据库该用户票据数据  
-                string str_clear = @"delete dbo.plant_token where userId='{0}'";
+                string str_clear = @"delete dbo.ls_token where userId='{0}'";
                 str_clear = string.Format(str_clear, userId);
                 flag = DBHelper.SqlHelper.ExecuteSql(str_clear);
             }
@@ -567,6 +568,157 @@ namespace logistic_service_server.Controllers
                 {
                     success = true,
                     backData = lost
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 修改房屋信息
+        /// <summary>  
+        /// 修改房屋信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveResidence(dynamic r)
+        {
+            string companyId = r.companyId;
+            string residence_content = r.residence_content;
+            Object data;
+
+            try
+            {
+                BLL.handleResidence residence = new BLL.handleResidence();
+                bool flag = false;
+                flag = residence.EditResidence(residence_content, companyId);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "更新房屋信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取房屋信息
+        /// <summary>  
+        /// 获取房屋信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getResidenceInfo()
+        {
+            DataTable dt = new BLL.handleResidence().GetResidenceInfo();
+            Object data;
+            if (dt.Rows.Count > 0)
+            {
+                List<residence> list = new List<residence>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    residence residence = new residence();
+                    residence.id = dt.Rows[i]["id"].ToString();
+                    residence.companyId = dt.Rows[i]["companyId"].ToString();
+                    residence.residence_content = dt.Rows[i]["residence_content"].ToString();
+                    residence.create_time = dt.Rows[i]["create_time"].ToString();
+
+                    list.Add(residence);
+                }
+
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取单家公司房屋信息
+        /// <summary>  
+        /// 获取单家公司房屋信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getCompanyResidenceInfo(string companyId)
+        {
+            DataTable dt = new BLL.handleResidence().GetCompanyResidenceInfo(companyId);
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                residence residence = new residence();
+                residence.id = dt.Rows[0]["id"].ToString();
+                residence.companyId = dt.Rows[0]["companyId"].ToString();
+                residence.residence_content = dt.Rows[0]["residence_content"].ToString();
+                residence.create_time = dt.Rows[0]["create_time"].ToString();
+
+                data = new
+                {
+                    success = true,
+                    backData = residence
                 };
             }
             else
