@@ -218,6 +218,62 @@ namespace logistic_service_server.Controllers
         }
         #endregion
 
+        #region 获取当日全天菜品信息
+        /// <summary>  
+        /// 获取所有菜单 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getDailyDish(string id)
+        {
+            DataTable dt = new BLL.handleDish().GetDailyDish(id);
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<dish> list = new List<dish>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    dish dish = new dish();
+                    dish.id = dt.Rows[i]["id"].ToString();
+                    dish.dish_title = dt.Rows[i]["dish_title"].ToString();
+                    dish.dish_content = dt.Rows[i]["dish_content"].ToString();
+                    dish.dish_img = dt.Rows[i]["dish_img"].ToString();
+                    dish.companyId = dt.Rows[i]["companyId"].ToString();
+                    dish.dish_type = dt.Rows[i]["dish_type"].ToString();
+                    dish.is_online = Convert.ToInt32(dt.Rows[i]["is_online"]);
+                    dish.update_time = dt.Rows[i]["update_time"].ToString();
+                    dish.create_time = dt.Rows[i]["create_time"].ToString();
+
+                    list.Add(dish);
+                }
+
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取菜单详情
         /// <summary>  
         /// 获取菜单详情 
