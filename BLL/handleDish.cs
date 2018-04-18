@@ -48,6 +48,26 @@ namespace BLL
             return dt;
         }
 
+        //获取当日全天菜品信息
+        public DataTable GetDailyDish(string companyId)
+        {
+            string str = @"select   id,
+                                    dish_title,
+                                    dish_content,
+                                    dish_img,
+                                    companyId,
+                                    dish_type,
+                                    ISNULL(is_online, 0) as is_online,
+                                    CONVERT(varchar(19), update_time, 120) as update_time,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.ls_dish
+                               where companyId='{0}' and is_online=1 and DateDiff(dd, update_time, getdate())=0";
+            str = string.Format(str, companyId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //新增菜品
         public bool AddDish(string dish_title, string dish_content, string dish_img, string companyId, string dish_type)
         {
