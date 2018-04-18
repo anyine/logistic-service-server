@@ -53,23 +53,9 @@ namespace logistic_service_server.Controllers
             }
             string userName = Convert.ToString(user.user_name);
             string userPwd = Convert.ToString(user.user_pwd);
-            string strSql = @"select u.id, 
-                                     pid,
-                                     ISNULL(p_name, '') as p_name, 
-                                     ISNULL(u.user_name, '') as user_name,
-                                     ISNULL(user_pwd, '') as user_pwd,
-                                     ISNULL(user_secondpwd, '') as user_secondpwd,
-                                     ISNULL(user_realname, '') as user_realname,
-                                     ISNULL(user_sex, '男') as user_sex,
-                                     ISNULL(user_telephone, '') as user_telephone,
-                                     ISNULL(user_qq, '') as user_qq,
-                                     ISNULL(user_weixin, '') as user_weixin,
-                                     ISNULL(user_alipay, '') as user_alipay,
-                                     ISNULL(i.user_points, 0) as user_points
-                              from dbo.plant_user as u
-                              left join dbo.plant_user_income as i
-                              on u.user_name = i.user_name
-                              where u.user_name = '{0}' and user_pwd = '{1}' and u.is_remove = 0";
+            string strSql = @"select    id
+                                        from dbo.ls_user
+                                        where user_name = '{0}' and user_pwd = '{1}'";
             strSql = string.Format(strSql, userName, userPwd);
             DataTable dt_user = DBHelper.SqlHelper.GetDataTable(strSql);
             var data = new object { };
@@ -81,14 +67,13 @@ namespace logistic_service_server.Controllers
                 //返回登录结果、用户信息、用户验证票据信息
                 var Token = FormsAuthentication.Encrypt(token);
                 //将身份信息保存在数据库中，验证当前请求是否是有效请求
-                string str_token = @"insert into dbo.plant_token (userId, token, ExpireDate) values ('{0}', '{1}', '{2}')";
+                string str_token = @"insert into dbo.ls_token (userId, token, expireDate) values ('{0}', '{1}', '{2}')";
                 str_token = string.Format(str_token, dt_user.Rows[0]["id"], Token, DateTime.Now.AddHours(1));
                 DBHelper.SqlHelper.ExecuteSql(str_token);
 
                 data = new
                 {
                     success = true,
-                    backData = CommonTool.JsonHelper.DataTableToJSON(dt_user),
                     token = Token
                 };
             }
@@ -97,7 +82,7 @@ namespace logistic_service_server.Controllers
                 data = new
                 {
                     success = false,
-                    backMsg = "auth check error"
+                    backMsg = "身份验证失败，请重试！"
                 };
             }
             JavaScriptSerializer serializer = new JavaScriptSerializer();

@@ -27,15 +27,14 @@ namespace treePlanting.Core
             if (!string.IsNullOrEmpty(token))
             {
                 //解密用户ticket,并校验用户名密码是否匹配
-                //if (ValidateTicket(token))
-                //{
-                //    base.IsAuthorized(actionContext);
-                //}
-                //else
-                //{
-                //    HandleUnauthorizedRequest(actionContext);
-                //}
-                base.IsAuthorized(actionContext);
+                if (ValidateTicket(token))
+                {
+                    base.IsAuthorized(actionContext);
+                }
+                else
+                {
+                    HandleUnauthorizedRequest(actionContext);
+                }
             }
             //如果取不到身份验证信息，并且不允许匿名访问，则返回未验证401
             else
@@ -44,7 +43,7 @@ namespace treePlanting.Core
                 //bool isAnonymous = attributes.Any(a => a is AllowAnonymousAttribute);
                 //if (isAnonymous) base.OnAuthorization(actionContext);
                 //else HandleUnauthorizedRequest(actionContext);
-                base.IsAuthorized(actionContext);
+                HandleUnauthorizedRequest(actionContext);
             }
         }
 
@@ -60,7 +59,7 @@ namespace treePlanting.Core
             string userName = strTicket.Substring(0, index);
             string password = strTicket.Substring(index + 1);
             //取得token，不通过说明用户退出，或者session已经过期
-            string str_checkToken = @"select * from dbo.plant_token where token='{0}'";
+            string str_checkToken = @"select * from dbo.ls_token where token='{0}'";
             str_checkToken = string.Format(str_checkToken, encryptToken);
             try
             {
@@ -69,7 +68,7 @@ namespace treePlanting.Core
                 if (dt.Rows.Count == 1)
                 {
                     //未超时  
-                    flag = (DateTime.Now <= Convert.ToDateTime(dt.Rows[0]["ExpireDate"])) ? true : false;
+                    flag = (DateTime.Now <= Convert.ToDateTime(dt.Rows[0]["expireDate"])) ? true : false;
                 }
             }
             catch (Exception ex) { }
