@@ -37,17 +37,6 @@ namespace BLL
             return dt;
         }
 
-        //新增新闻
-        //        public bool AddNews(string news_type, string news_cover, string news_title, string news_brief, string news_content)
-        //        {
-        //            string str = @"insert into dbo.wxop_news (news_type, news_cover, news_title, news_brief, news_content)
-        //                                values ('{0}', '{1}', '{2}', '{3}', '{4}')";
-        //            str = string.Format(str, news_type, news_cover, news_title, news_brief, news_content);
-        //            int flag = DBHelper.SqlHelper.ExecuteSql(str);
-
-        //            return flag > 0 ? true : false;
-        //        }
-
         //更新失物招领信息
         public bool EditLost(string lost_content, string id)
         {
