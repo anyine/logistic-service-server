@@ -210,7 +210,6 @@ namespace logistic_service_server.Controllers
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
-        [SupportFilter]
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage getDailyDish(string id)
         {
@@ -550,7 +549,6 @@ namespace logistic_service_server.Controllers
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
-        [SupportFilter]
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage getCompanyLostInfo(string companyId)
         {
@@ -701,11 +699,10 @@ namespace logistic_service_server.Controllers
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
-        [SupportFilter]
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage getCompanyResidenceInfo(string companyId)
+        public HttpResponseMessage getCompanyResidenceInfo(string id)
         {
-            DataTable dt = new BLL.handleResidence().GetCompanyResidenceInfo(companyId);
+            DataTable dt = new BLL.handleResidence().GetCompanyResidenceInfo(id);
             Object data;
             if (dt.Rows.Count == 1)
             {

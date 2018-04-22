@@ -111,6 +111,7 @@
     <Compile Include="Controllers\AdminManageController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SurveyController.cs" />
     <Compile Include="Core\JsonCallbackAttribute.cs" />
     <Compile Include="Core\SupportFilter.cs" />
     <Compile Include="Global.asax.cs">
@@ -119,6 +120,7 @@
     <Compile Include="Models\dish.cs" />
     <Compile Include="Models\lost.cs" />
     <Compile Include="Models\residence.cs" />
+    <Compile Include="Models\survey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
