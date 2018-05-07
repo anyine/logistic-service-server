@@ -45,6 +45,7 @@
     <Compile Include="DataModal.cs" />
     <Compile Include="EnumData.cs" />
     <Compile Include="handleDish.cs" />
+    <Compile Include="handleHealth.cs" />
     <Compile Include="handleResidence.cs" />
     <Compile Include="handleSurvey.cs" />
     <Compile Include="Lost.cs" />
