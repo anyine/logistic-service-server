@@ -68,7 +68,7 @@ namespace logistic_service_server.Controllers
                 var Token = FormsAuthentication.Encrypt(token);
                 //将身份信息保存在数据库中，验证当前请求是否是有效请求
                 string str_token = @"insert into dbo.ls_token (userId, token, expireDate) values ('{0}', '{1}', '{2}')";
-                str_token = string.Format(str_token, dt_user.Rows[0]["id"], Token, DateTime.Now.AddHours(1));
+                str_token = string.Format(str_token, dt_user.Rows[0]["id"], Token, DateTime.Now.AddHours(3));
                 DBHelper.SqlHelper.ExecuteSql(str_token);
 
                 data = new
