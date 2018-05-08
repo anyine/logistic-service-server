@@ -66,6 +66,52 @@ namespace logistic_service_server.Controllers
         }
         #endregion
 
+        #region 获取健康信息详情
+        /// <summary>  
+        /// 获取健康信息详情 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getHealthDetail(string id)
+        {
+            DataTable dt = new BLL.handleHealth().GetHealthDetail(id);
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                health health = new health();
+                health.id = dt.Rows[0]["id"].ToString();
+                health.companyId = dt.Rows[0]["companyId"].ToString();
+                health.health_cover = dt.Rows[0]["health_cover"].ToString();
+                health.health_title = dt.Rows[0]["health_title"].ToString();
+                health.health_desc = dt.Rows[0]["health_desc"].ToString();
+                health.health_content = dt.Rows[0]["health_content"].ToString();
+                health.create_time = dt.Rows[0]["create_time"].ToString();
+
+                data = new
+                {
+                    success = true,
+                    backData = health
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 新增健康信息
         /// <summary>  
         /// 新增健康信息 
