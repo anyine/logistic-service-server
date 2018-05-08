@@ -26,6 +26,23 @@ namespace BLL
             return dt;
         }
 
+        public DataTable GetHealthDetail(string id)
+        {
+            string str = @"select   id,
+                                    companyId,
+                                    health_cover,
+                                    health_title,
+                                    health_desc,
+                                    health_content,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.ls_health
+                               where id='{0}'";
+            str = string.Format(str, id);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //新增健康信息                                
         public bool AddHealth(string companyId, string health_cover, string health_title, string health_desc, string health_content)
         {
