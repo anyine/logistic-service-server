@@ -24,6 +24,24 @@ namespace BLL
             return dt;
         }
 
+        //获取所有服务信息
+        public DataTable GetServiceList()
+        {
+            string str = @"select   id,
+                                    companyId,
+                                    service_type,
+                                    service_title,
+                                    service_content,
+                                    service_cover,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.ls_serivce
+                               order by create_time desc";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         public DataTable GetCompanyDetail(string id)
         {
             string str = @"select   id,
