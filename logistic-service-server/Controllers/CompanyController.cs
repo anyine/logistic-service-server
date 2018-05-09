@@ -234,5 +234,58 @@ namespace logistic_service_server.Controllers
             };
         }
         #endregion
+
+        #region 获取所有服务咨询和节日信息
+        /// <summary>  
+        /// 获取所有服务咨询和节日信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getServiceList()
+        {
+            DataTable dt = new BLL.handleCompany().GetServiceList();
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<service> list = new List<service>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    service service = new service();
+                    service.id = dt.Rows[i]["id"].ToString();
+                    service.companyId = dt.Rows[i]["companyId"].ToString();
+                    service.service_type = dt.Rows[i]["service_type"].ToString();
+                    service.service_title = dt.Rows[i]["service_title"].ToString();
+                    service.service_content = dt.Rows[i]["service_content"].ToString();
+                    service.service_cover = dt.Rows[i]["service_cover"].ToString();
+                    service.create_time = dt.Rows[i]["create_time"].ToString();
+
+                    list.Add(service);
+                }
+
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
     }
 }
