@@ -400,5 +400,60 @@ namespace logistic_service_server.Controllers
             };
         }
         #endregion
+
+        #region 删除服务信息
+        /// <summary>  
+        /// 删除服务信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage delService(dynamic d)
+        {
+            string id = d.id;
+            object data = new object();
+            try
+            {
+                BLL.handleCompany company = new BLL.handleCompany();
+                bool flag = false;
+
+                flag = company.DelService(id);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "删除服务节日信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
     }
 }

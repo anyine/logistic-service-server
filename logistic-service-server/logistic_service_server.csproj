@@ -122,6 +122,7 @@
     <Compile Include="Models\company.cs" />
     <Compile Include="Models\dish.cs" />
     <Compile Include="Models\health.cs" />
+    <Compile Include="Models\live.cs" />
     <Compile Include="Models\lost.cs" />
     <Compile Include="Models\need.cs" />
     <Compile Include="Models\residence.cs" />

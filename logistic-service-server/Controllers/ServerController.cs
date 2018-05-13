@@ -434,6 +434,61 @@ namespace logistic_service_server.Controllers
         }
         #endregion
 
+        #region 删除菜品
+        /// <summary>  
+        /// 删除菜品 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage delDish(dynamic d)
+        {
+            string id = d.id;
+            object data = new object();
+            try
+            {
+                BLL.handleDish dish = new BLL.handleDish();
+                bool flag = false;
+
+                flag = dish.DelDish(id);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "删除菜品失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 修改失物招领信息
         /// <summary>  
         /// 修改失物招领信息 
