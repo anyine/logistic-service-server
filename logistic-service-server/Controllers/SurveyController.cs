@@ -34,8 +34,8 @@ namespace logistic_service_server.Controllers
                     survey.id = dt.Rows[i]["id"].ToString();
                     survey.companyId = dt.Rows[i]["companyId"].ToString();
                     survey.satisfaction = dt.Rows[i]["satisfaction"].ToString();
-                    survey.telephone = dt.Rows[i]["telephone"].ToString();
-                    survey.suggestion = dt.Rows[i]["suggestion"].ToString();
+                    survey.dish = dt.Rows[i]["dish"].ToString();
+                    survey.clean = dt.Rows[i]["clean"].ToString();
                     survey.create_time = dt.Rows[i]["create_time"].ToString();
 
                     list.Add(survey);
@@ -85,6 +85,71 @@ namespace logistic_service_server.Controllers
 
             string companyId = s.companyId;
             string satisfaction = s.satisfaction;
+            string dish = s.dish;
+            string clean = s.clean;
+            Object data;
+
+            try
+            {
+                BLL.handleSurvey survey = new BLL.handleSurvey();
+                bool flag = false;
+                flag = survey.AddSurvey(companyId, satisfaction, dish, clean);
+
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "保存信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 新增需求信息
+        /// <summary>  
+        /// 新增需求信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveNeed(dynamic s)
+        {
+            if (s == null)
+            {
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent("", System.Text.Encoding.UTF8, "application/json")
+                };
+            }
+
+            string companyId = s.companyId;
             string telephone = s.telephone;
             string suggestion = s.suggestion;
             Object data;
@@ -93,7 +158,7 @@ namespace logistic_service_server.Controllers
             {
                 BLL.handleSurvey survey = new BLL.handleSurvey();
                 bool flag = false;
-                flag = survey.AddSurvey(companyId, satisfaction, telephone, suggestion);
+                flag = survey.AddNeed(companyId, telephone, suggestion);
 
 
                 if (flag)

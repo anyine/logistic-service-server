@@ -123,6 +123,7 @@
     <Compile Include="Models\dish.cs" />
     <Compile Include="Models\health.cs" />
     <Compile Include="Models\lost.cs" />
+    <Compile Include="Models\need.cs" />
     <Compile Include="Models\residence.cs" />
     <Compile Include="Models\service.cs" />
     <Compile Include="Models\survey.cs" />

@@ -5,13 +5,12 @@ using System.Web;
 
 namespace logistic_service_server.Models
 {
-    public class survey
+    public class need
     {
         public string id { get; set; }
         public string companyId { get; set; }
-        public string satisfaction { get; set; }
-        public string dish { get; set; }
-        public string clean { get; set; }
+        public string telephone { get; set; }
+        public string suggestion { get; set; }
         public string create_time { get; set; }
     }
 }

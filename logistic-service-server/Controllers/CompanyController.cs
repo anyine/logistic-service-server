@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Script.Serialization;
+using treePlanting.Core;
 
 namespace logistic_service_server.Controllers
 {
@@ -268,6 +269,118 @@ namespace logistic_service_server.Controllers
                 {
                     success = true,
                     backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 新增公司服务节日信息
+        /// <summary>  
+        /// 新增公司服务节日信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveAPService(dynamic s)
+        {
+            string id = s.id;
+            string companyId = s.companyId;
+            string service_type = s.service_type;
+            string service_title = s.service_title;
+            string service_content = s.service_content;
+            Object data;
+
+            try
+            {
+                BLL.handleCompany company = new BLL.handleCompany();
+                bool flag = false;
+                if (string.IsNullOrEmpty(id))
+                {
+                    flag = company.AddService(companyId, service_type, service_title, service_content);
+                }
+                else
+                {
+                    flag = company.EditService(id, companyId, service_type, service_title, service_content);
+                }
+
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "更新信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取服务信息详情
+        /// <summary>  
+        /// 获取服务信息详情 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getServiceDetail(string id)
+        {
+            DataTable dt = new BLL.handleCompany().GetServiceDetail(id);
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                service service = new service();
+                service.id = dt.Rows[0]["id"].ToString();
+                service.companyId = dt.Rows[0]["companyId"].ToString();
+                service.service_type = dt.Rows[0]["service_type"].ToString();
+                service.service_title = dt.Rows[0]["service_title"].ToString();
+                service.service_content = dt.Rows[0]["service_content"].ToString();
+                service.create_time = dt.Rows[0]["create_time"].ToString();
+
+                data = new
+                {
+                    success = true,
+                    backData = service
                 };
             }
             else
