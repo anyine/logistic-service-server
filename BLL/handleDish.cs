@@ -101,5 +101,15 @@ namespace BLL
 
             return flag > 0 ? true : false;
         }
+
+        //删除菜品
+        public bool DelDish(string id)
+        {
+            string str = @"delete dbo.ls_dish where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
     }
 }

@@ -69,6 +69,16 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //删除服务信息
+        public bool DelService(string id)
+        {
+            string str = @"delete dbo.ls_service where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //更新公司相册信息                                
         public bool updateComPhoto(string companyId, string photo)
         {
