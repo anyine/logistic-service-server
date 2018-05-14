@@ -455,5 +455,99 @@ namespace logistic_service_server.Controllers
             };
         }
         #endregion
+
+        #region 修改班车信息
+        /// <summary>  
+        /// 修改班车信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveBus(dynamic r)
+        {
+            string bus_content = r.bus_content;
+            Object data;
+
+            try
+            {
+                BLL.handleCompany company = new BLL.handleCompany();
+                bool flag = false;
+                flag = company.saveBus(bus_content);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "更新班车信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取bus信息详情
+        /// <summary>  
+        /// 获取bus信息详情 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getBusDetail()
+        {
+            DataTable dt = new BLL.handleCompany().GetBusDetail();
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                string bus_content = dt.Rows[0]["bus_content"].ToString();
+
+                data = new
+                {
+                    success = true,
+                    backData = bus_content
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
     }
 }
