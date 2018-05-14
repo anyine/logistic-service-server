@@ -129,5 +129,29 @@ namespace BLL
 
             return dt;
         }
+
+        //更新班车信息                                
+        public bool saveBus(string bus_content)
+        {
+            string str = @"update dbo.ls_bus
+                                  set bus_content='{0}' ";
+            str = string.Format(str, bus_content);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
+        //获取bus详情
+        public DataTable GetBusDetail()
+        {
+            string str = @"select   id,
+                                    bus_content,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.ls_bus";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
     }
 }

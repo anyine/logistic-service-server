@@ -99,5 +99,15 @@ namespace BLL
 
             return flag > 0 ? true : false;
         }
+
+        //删除动态
+        public bool DelLive(string id)
+        {
+            string str = @"delete dbo.ls_live where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
     }
 }
