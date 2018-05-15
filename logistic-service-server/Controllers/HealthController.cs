@@ -118,17 +118,11 @@ namespace logistic_service_server.Controllers
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
+        [SupportFilter]
         [AcceptVerbs("OPTIONS", "POST")]
         public HttpResponseMessage saveHealth(dynamic s)
         {
-            if (s == null)
-            {
-                return new HttpResponseMessage
-                {
-                    Content = new StringContent("", System.Text.Encoding.UTF8, "application/json")
-                };
-            }
-
+            string id = s.id;
             string companyId = s.companyId;
             string health_cover = s.health_cover;
             string health_title = s.health_title;
@@ -140,7 +134,14 @@ namespace logistic_service_server.Controllers
             {
                 BLL.handleHealth health = new BLL.handleHealth();
                 bool flag = false;
-                flag = health.AddHealth(companyId, health_cover, health_title, health_desc, health_content);
+                if (string.IsNullOrEmpty(id))
+                {
+                    flag = health.AddHealth(companyId, health_cover, health_title, health_desc, health_content);
+                }
+                else
+                {
+                    flag = health.EditHealth(id, companyId, health_cover, health_title, health_desc, health_content);
+                }
 
 
                 if (flag)
@@ -156,6 +157,61 @@ namespace logistic_service_server.Controllers
                     {
                         success = false,
                         backMsg = "保存信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 删除健康信息
+        /// <summary>  
+        /// 删除健康信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage delHealth(dynamic d)
+        {
+            string id = d.id;
+            object data = new object();
+            try
+            {
+                BLL.handleHealth health = new BLL.handleHealth();
+                bool flag = false;
+
+                flag = health.DelHealth(id);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "删除健康信息失败"
 
                     };
                 }
