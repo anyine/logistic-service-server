@@ -54,6 +54,27 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //更新健康信息
+        public bool EditHealth(string id, string companyId, string health_cover, string health_title, string health_desc, string health_content)
+        {
+            string str = @"update dbo.ls_health set companyId='{1}', health_cover='{2}', health_title='{3}', health_desc='{4}', health_content='{5}'
+                                  where id='{0}'";
+            str = string.Format(str, id, companyId, health_cover, health_title, health_desc, health_content);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
+        //删除健康信息
+        public bool DelHealth(string id)
+        {
+            string str = @"delete dbo.ls_health where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //获取所有动态信息
         public DataTable GetLiveList()
         {
