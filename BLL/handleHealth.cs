@@ -121,6 +121,17 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //更新动态信息
+        public bool EditLive(string id, string live_cover, string live_title, string live_desc, string live_content)
+        {
+            string str = @"update dbo.ls_live set live_cover='{1}', live_title='{2}', live_desc='{3}', live_content='{4}'
+                                  where id='{0}'";
+            str = string.Format(str, id, live_cover, live_title, live_desc, live_content);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //删除动态
         public bool DelLive(string id)
         {
