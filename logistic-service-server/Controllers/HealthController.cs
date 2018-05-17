@@ -351,6 +351,7 @@ namespace logistic_service_server.Controllers
                 };
             }
 
+            string id = s.id;
             string live_cover = s.live_cover;
             string live_title = s.live_title;
             string live_desc = s.live_desc;
@@ -361,8 +362,14 @@ namespace logistic_service_server.Controllers
             {
                 BLL.handleHealth health = new BLL.handleHealth();
                 bool flag = false;
-                flag = health.AddLive(live_cover, live_title, live_desc, live_content);
-
+                if (string.IsNullOrEmpty(id))
+                {
+                    flag = health.AddLive(live_cover, live_title, live_desc, live_content);
+                }
+                else
+                {
+                    flag = health.EditLive(id, live_cover, live_title, live_desc, live_content);
+                }
 
                 if (flag)
                 {
