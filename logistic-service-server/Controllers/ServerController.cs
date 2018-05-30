@@ -228,6 +228,7 @@ namespace logistic_service_server.Controllers
                     dish.dish_img = dt.Rows[i]["dish_img"].ToString();
                     dish.companyId = dt.Rows[i]["companyId"].ToString();
                     dish.dish_type = dt.Rows[i]["dish_type"].ToString();
+                    dish.dish_week = dt.Rows[i]["dish_week"].ToString();
                     dish.is_online = Convert.ToInt32(dt.Rows[i]["is_online"]);
                     dish.update_time = dt.Rows[i]["update_time"].ToString();
                     dish.create_time = dt.Rows[i]["create_time"].ToString();
