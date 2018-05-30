@@ -64,7 +64,7 @@ namespace BLL
                                     CONVERT(varchar(19), update_time, 120) as update_time,
                                     CONVERT(varchar(19), create_time, 120) as create_time
                                from dbo.ls_dish
-                               where companyId='{0}' and is_online=1 and DateDiff(dd, update_time, getdate())=0";
+                               where companyId='{0}' and is_online=1 and dish_week != '' and dish_week is not null";
             str = string.Format(str, companyId);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
