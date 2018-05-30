@@ -172,6 +172,7 @@ namespace logistic_service_server.Controllers
                     dish.dish_img = dt.Rows[i]["dish_img"].ToString();
                     dish.companyId = dt.Rows[i]["companyId"].ToString();
                     dish.dish_type = dt.Rows[i]["dish_type"].ToString();
+                    dish.dish_week = dt.Rows[i]["dish_week"].ToString();
                     dish.is_online = Convert.ToInt32(dt.Rows[i]["is_online"]);
                     dish.update_time = dt.Rows[i]["update_time"].ToString();
                     dish.create_time = dt.Rows[i]["create_time"].ToString();
@@ -389,6 +390,7 @@ namespace logistic_service_server.Controllers
         {
             string id = d.id;
             int is_online = d.is_online;
+            string dish_week = d.dish_week;
             Object data;
 
             try
@@ -396,7 +398,7 @@ namespace logistic_service_server.Controllers
                 BLL.handleDish dish = new BLL.handleDish();
                 bool flag = false;
 
-                flag = dish.OnlineStateChange(id, is_online);
+                flag = dish.OnlineStateChange(id, is_online, dish_week);
 
                 if (flag)
                 {

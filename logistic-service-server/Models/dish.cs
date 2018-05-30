@@ -13,6 +13,7 @@ namespace logistic_service_server.Models
         public string dish_img { set; get; }
         public string companyId { set; get; }
         public string dish_type { set; get; }
+        public string dish_week { set; get; }
         public int is_online { set; get; }
         public string update_time { set; get; }
         public string create_time { set; get; }
