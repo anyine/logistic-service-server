@@ -17,6 +17,7 @@ namespace BLL
                                     dish_img,
                                     companyId,
                                     dish_type,
+                                    dish_week,
                                     ISNULL(is_online, 0) as is_online,
                                     CONVERT(varchar(19), update_time, 120) as update_time,
                                     CONVERT(varchar(19), create_time, 120) as create_time
@@ -37,6 +38,7 @@ namespace BLL
                                     dish_img,
                                     companyId,
                                     dish_type,
+                                    dish_week,
                                     ISNULL(is_online, 0) as is_online,
                                     CONVERT(varchar(19), update_time, 120) as update_time,
                                     CONVERT(varchar(19), create_time, 120) as create_time
@@ -57,6 +59,7 @@ namespace BLL
                                     dish_img,
                                     companyId,
                                     dish_type,
+                                    dish_week,
                                     ISNULL(is_online, 0) as is_online,
                                     CONVERT(varchar(19), update_time, 120) as update_time,
                                     CONVERT(varchar(19), create_time, 120) as create_time
@@ -91,12 +94,12 @@ namespace BLL
         }
 
         //更新菜品推荐状态
-        public bool OnlineStateChange(string id, int onlineState)
+        public bool OnlineStateChange(string id, int onlineState, string dish_week)
         {
             DateTime dt = DateTime.Now;
 
-            string str = @"update dbo.ls_dish set is_online={1}, update_time='{2}' where id='{0}'";
-            str = string.Format(str, id, onlineState, dt);
+            string str = @"update dbo.ls_dish set is_online={1}, dish_week='{2}', update_time='{3}' where id='{0}'";
+            str = string.Format(str, id, onlineState, dish_week, dt);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
