@@ -375,6 +375,7 @@ namespace logistic_service_server.Controllers
                 service.service_type = dt.Rows[0]["service_type"].ToString();
                 service.service_title = dt.Rows[0]["service_title"].ToString();
                 service.service_content = dt.Rows[0]["service_content"].ToString();
+                service.service_cover = dt.Rows[0]["service_cover"].ToString();
                 service.create_time = dt.Rows[0]["create_time"].ToString();
 
                 data = new
