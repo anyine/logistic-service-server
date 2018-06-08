@@ -120,6 +120,7 @@ namespace BLL
                                     companyId,
                                     service_type,
                                     service_title,
+                                    service_cover,
                                     service_content,
                                     CONVERT(varchar(19), create_time, 120) as create_time
                                from dbo.ls_service
