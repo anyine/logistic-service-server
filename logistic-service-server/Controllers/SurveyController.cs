@@ -257,16 +257,63 @@ namespace logistic_service_server.Controllers
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage getGymDetail(string id)
         {
-            DataTable dt = new BLL.handleCompany().GetBusDetail();
+            DataTable dt = new BLL.handleSurvey().GetBallDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
             {
-                string bus_content = dt.Rows[0]["bus_content"].ToString();
+                ball ball = new ball();
+                ball.id = dt.Rows[0]["id"].ToString();
+                ball.ball_type = dt.Rows[0]["ball_type"].ToString();
+                ball.ball_content = dt.Rows[0]["ball_content"].ToString();
+                ball.create_time = dt.Rows[0]["create_time"].ToString();
 
                 data = new
                 {
                     success = true,
-                    backData = bus_content
+                    backData = ball
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取球场信息详情通过类型
+        /// <summary>  
+        /// 获取球场信息详情通过类型 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getGymDetailByType(string type)
+        {
+            DataTable dt = new BLL.handleSurvey().GetBallDetailByType(type);
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                ball ball = new ball();
+                ball.id = dt.Rows[0]["id"].ToString();
+                ball.ball_type = dt.Rows[0]["ball_type"].ToString();
+                ball.ball_content = dt.Rows[0]["ball_content"].ToString();
+                ball.create_time = dt.Rows[0]["create_time"].ToString();
+
+                data = new
+                {
+                    success = true,
+                    backData = ball
                 };
             }
             else
@@ -329,6 +376,61 @@ namespace logistic_service_server.Controllers
                     {
                         success = false,
                         backMsg = "更新信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 删除球类
+        /// <summary>  
+        /// 删除球类 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage delBall(dynamic d)
+        {
+            string id = d.id;
+            object data = new object();
+            try
+            {
+                BLL.handleSurvey survey = new BLL.handleSurvey();
+                bool flag = false;
+
+                flag = survey.DelBall(id);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "删除球类失败"
 
                     };
                 }
