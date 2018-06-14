@@ -89,18 +89,40 @@ namespace BLL
         public DataTable GetBallDetail(string id)
         {
             string str = @"select   id,
-                                    companyId,
-                                    service_type,
-                                    service_title,
-                                    service_cover,
-                                    service_content,
+                                    ball_type,
+                                    ball_content,
                                     CONVERT(varchar(19), create_time, 120) as create_time
-                               from dbo.ls_service
+                               from dbo.ls_ball
                                where id='{0}'";
             str = string.Format(str, id);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
+        }
+
+        //获取运动详情
+        public DataTable GetBallDetailByType(string type)
+        {
+            string str = @"select   id,
+                                    ball_type,
+                                    ball_content,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.ls_ball
+                               where ball_type='{0}'";
+            str = string.Format(str, type);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //删除运动类别
+        public bool DelBall(string id)
+        {
+            string str = @"delete dbo.ls_ball where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
         }
 
     }
