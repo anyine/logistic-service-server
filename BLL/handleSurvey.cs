@@ -48,6 +48,22 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //获取所有需求
+        public DataTable GetNeedList()
+        {
+            string str = @"select   id,
+                                    companyId,
+                                    telephone,
+                                    suggestion,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.ls_need
+                               order by create_time desc";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //获取所有球场信息
         public DataTable GetGymList()
         {
