@@ -197,6 +197,58 @@ namespace logistic_service_server.Controllers
         }
         #endregion
 
+        #region 获取所有需求
+        /// <summary>  
+        /// 获取所有需求 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getNeedList()
+        {
+            DataTable dt = new BLL.handleSurvey().GetNeedList();
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<need> list = new List<need>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    need need = new need();
+                    need.id = dt.Rows[i]["id"].ToString();
+                    need.companyId = dt.Rows[i]["companyId"].ToString();
+                    need.telephone = dt.Rows[i]["telephone"].ToString();
+                    need.suggestion = dt.Rows[i]["suggestion"].ToString();
+                    need.create_time = dt.Rows[i]["create_time"].ToString();
+
+                    list.Add(need);
+                }
+
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取所有球场信息
         /// <summary>  
         /// 获取所有球场信息 
